@@ -1,6 +1,9 @@
-(ns leiningen.plum)
+(ns leiningen.plum
+  (require [leiningen.file-operations :as fs]))
 
 (defn plum
-  "I don't do a lot."
+  "TODO"
   [project & args]
-  (println "Hi!"))
+  (do (leiningen.core.main/info (:test-paths project))
+    (leiningen.core.main/info (fs/get-filenames-in-paths (:test-paths project) ["clj" "cljs"]))))
+
