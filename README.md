@@ -1,6 +1,6 @@
 # plum
 
-TODO
+A lainingen plugin used for coping unit test's content into function's description. Deep alfa.
 
 ## Usage
 
