@@ -1,4 +1,4 @@
-(ns leiningen.documentation)
+(ns leiningen.read-test-content)
 
 (defn function-name-after-marker [text marker]
   (let [name-start-position (+ (count marker) (.indexOf text marker))

@@ -1,6 +1,6 @@
-(ns leiningen.documentation-spec
+(ns leiningen.read-test-content-spec
   (:require [speclj.core :refer :all]
-            [leiningen.documentation :refer :all]
+            [leiningen.read-test-content :refer :all]
             [leiningen.debug :refer :all]
             [clojure.zip :as zip]))
 
