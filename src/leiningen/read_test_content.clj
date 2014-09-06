@@ -1,8 +1,7 @@
 (ns leiningen.read-test-content)
 
 (defn function-name-after-marker [text marker]
-  (let [name-start-position (+ (count marker) (.indexOf text marker))
-        after-marker (subs text name-start-position)]
+  (let [name-start-position (+ (count marker) (.indexOf text marker))]
     (first (clojure.string/split (subs text name-start-position) #" "))))
 
 (defn extract-text
