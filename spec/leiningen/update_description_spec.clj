@@ -52,5 +52,10 @@
           (it "More functions present inside the source file."
               (should= "(defn diffrent_fun [] 1)\n(defn fun\n\"Speclj\n\ntest\" [] 1)"
                        (add-test->commend (gen-test-structure "fun" ["test"])
-                                          "(defn diffrent_fun [] 1)\n(defn fun [] 1)"))))
+                                          "(defn diffrent_fun [] 1)\n(defn fun [] 1)")))
+          (it "There is an existing function description."
+              (should= "(defn fun \"Description\nSpeclj\n\ntest\" [] 1)"
+                       (add-test->commend (gen-test-structure "fun" ["test"])
+                                          "(defn fun \"Description\" [] 1)")))
+          )
 
