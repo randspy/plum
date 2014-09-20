@@ -1,6 +1,6 @@
-(ns leiningen.update-description-spec
+(ns leiningen.update.code-description-spec
   (:require [speclj.core :refer :all]
-            [leiningen.update-description :refer :all]
+            [leiningen.update.code-description :refer :all]
             [leiningen.debug :refer :all]))
 
 (def basic-function-definition "(defn fun 1)")
