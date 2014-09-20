@@ -53,9 +53,13 @@
               (should= "(defn diffrent_fun [] 1)\n(defn fun\n\"Speclj\n\ntest\" [] 1)"
                        (add-test->commend (gen-test-structure "fun" ["test"])
                                           "(defn diffrent_fun [] 1)\n(defn fun [] 1)")))
-          (it "There is an existing function description."
-              (should= "(defn fun \"Description\nSpeclj\n\ntest\" [] 1)"
-                       (add-test->commend (gen-test-structure "fun" ["test"])
-                                          "(defn fun \"Description\" [] 1)")))
-          )
+          (describe "There is an existing function description."
+                    (it "Updates description with unit tests content."
+                        (should= "(defn fun \"Description\nSpeclj\n\ntest\" [] 1)"
+                                 (add-test->commend (gen-test-structure "fun" ["test"])
+                                                    "(defn fun \"Description\" [] 1)")))
+                    (it "Updatas description with more than one unit test case."
+                        (should= "(defn fun \"Description\nSpeclj\n\ntest one\n\ntest two\" [] 1)"
+                                 (add-test->commend (gen-test-structure "fun" ["test two"])
+                                                    "(defn fun \"Description\nSpeclj\n\ntest one\" [] 1)")))))
 
