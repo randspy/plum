@@ -9,6 +9,15 @@
                             (.getPath file))))
 
 
-(defn get-filenames-in-paths [paths endings]
+(defn- filenames-in-paths [paths endings]
   (let [paths (map #(get-files-paths % endings) paths)]
     (reduce concat paths)))
+
+(defn- read-file [filename]
+  (let [filename-without-path (last (clojure.string/split filename #"(\\|/)"))
+        file-content (slurp filename)]
+    {:filename filename-without-path :content file-content}))
+
+(defn read-files [paths endings]
+  (let [file-list (filenames-in-paths paths endings)]
+    (map read-file file-list)))

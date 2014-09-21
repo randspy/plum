@@ -4,6 +4,7 @@
 (defn plum
   "TODO"
   [project & args]
-  (do (leiningen.core.main/info (:test-paths project))
-    (leiningen.core.main/info (fs/get-filenames-in-paths (:test-paths project) ["clj" "cljs"]))))
+  (do (leiningen.core.main/info project)
+    (leiningen.core.main/info (fs/read-files (:test-paths project) ["clj" "cljs"]))
+    (leiningen.core.main/info (fs/read-files (:source-paths project) ["clj" "cljs"]))))
 
