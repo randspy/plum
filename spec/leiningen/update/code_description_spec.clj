@@ -45,6 +45,10 @@
               (should= "(defn  fun\n\"Speclj\n\ntest\"  \n  1)"
                        (add-test->commend (gen-test-structure "fun" ["test"])
                                           "(defn  fun  \n  1)")))
+          (it "Quatations are going to be escaped."
+              (should= "(defn  fun\n\"Speclj\n\n\\\"test\\\"\"  \n  1)"
+                       (add-test->commend (gen-test-structure "fun" ["\"test\""])
+                                          "(defn  fun  \n  1)")))
           (it "More than one test case is present."
               (should= "(defn fun\n\"Speclj\n\ntest one\n\ntest two\" 1)"
                        (add-test->commend (gen-test-structure "fun" ["test one" "test two"])
@@ -58,8 +62,8 @@
                         (should= "(defn fun \"Description\nSpeclj\n\ntest\" [] 1)"
                                  (add-test->commend (gen-test-structure "fun" ["test"])
                                                     "(defn fun \"Description\" [] 1)")))
-                    (it "Updatas description with more than one unit test case."
-                        (should= "(defn fun \"Description\nSpeclj\n\ntest one\n\ntest two\" [] 1)"
+                    (it "Replace existing description added before by the plugin."
+                        (should= "(defn fun \"Description\nSpeclj\n\ntest two\" [] 1)"
                                  (add-test->commend (gen-test-structure "fun" ["test two"])
-                                                    "(defn fun \"Description\nSpeclj\n\ntest one\" [] 1)")))))
+                                                    "(defn fun \"Description\nSpeclj\n\n\\\"test one\\\"\" [] 1)")))))
 

@@ -37,33 +37,32 @@
                         (should= "" (extract-text (str "(describe \"" doc-marker "\")" ) doc-marker)))))
 
 (describe "Reads tests content for adding it to source code."
-          (with marker "Marker:")
           (describe "There is nothing to add."
                     (with test-source-code "(describe test content)")
                     (it "Returns nothing"
                         (should= []
-                                 (test-base-coments @test-source-code @marker))))
+                                 (test-based-comments @test-source-code))))
           (describe "Test source code contains markers."
-                    (with test-source-code "(it \"Marker:function Description\" (should (function params)))")
+                    (with test-source-code "(it \"Speclj:function Description\" (should (function params)))")
                     (with test-comments [{:function-name "function"
                                           :test-framework "Speclj"
-                                          :tests "(it \"Description\" (should (function params)))"}])
+                                          :tests ["(it \"Description\" (should (function params)))"]}])
                     (it "Returns marker."
-                        (should= @test-comments (test-base-coments @test-source-code @marker)))
+                        (should= @test-comments (test-based-comments @test-source-code)))
                     (describe "There are present more than one tests. Only one contain marker"
-                             (with test-source-code "(it \"Marker:function Description\" (should (function params)))
+                             (with test-source-code "(it \"Speclj:function Description\" (should (function params)))
                                                      (it \"function no marker description\")")
                              (it "Returns only marked test cases."
-                                 (should= @test-comments (test-base-coments @test-source-code @marker))))
+                                 (should= @test-comments (test-based-comments @test-source-code))))
                     (describe "More tests contain marker"
-                              (with test-source-code "(it \"Marker:function-one Description\" (should (function-one params)))
-                                                      (it \"Marker:function-two Description\" (should (function-two params)))")
+                              (with test-source-code "(it \"Speclj:function-one Description\" (should (function-one params)))
+                                                      (it \"Speclj:function-one Description\" (should (function-two params)))")
                               (with test-comments [{:function-name  "function-one"
                                                     :test-framework "Speclj"
-                                                    :tests          "(it \"Description\" (should (function-one params)))"}
-                                                   {:function-name  "function-two"
+                                                    :tests          ["(it \"Description\" (should (function-one params)))"]}
+                                                   {:function-name  "function-one"
                                                     :test-framework "Speclj"
-                                                    :tests          "(it \"Description\" (should (function-two params)))"}])
+                                                    :tests          ["(it \"Description\" (should (function-two params)))"]}])
                               (it "Returns only marked test cases."
-                                  (should= @test-comments (test-base-coments @test-source-code @marker))))))
+                                  (should= @test-comments (test-based-comments @test-source-code))))))
 

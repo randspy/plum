@@ -21,24 +21,28 @@
 
 (defn- convert-token->string [token]
   (if (string? token)
-    (str "\"" token "\"")
+    (str "\"" (clojure.string/replace token "\"" "\\\\\"") "\"")
     (str token)))
 
+(defn- escape-quatations [text]
+  (if text
+    (clojure.string/replace text #"\"" "\\\\\"")))
+
 (defn- wrap-in-quotations [elements-for-quotations]
-  (str " \"" (reduce str elements-for-quotations) "\""))
+   (str " \"" (escape-quatations (reduce str elements-for-quotations)) "\""))
 
 (defn- combine-test-framework-name-with-test-names [old-documentation test-framework tests]
   (if (seq test-framework)
     (let [test-string (reduce str (map #(str "\n\n" %) tests))]
       (if (not-empty old-documentation)
-        (if (< 0 (.indexOf old-documentation test-framework))
-          (wrap-in-quotations [old-documentation test-string])
+        (if (.contains old-documentation test-framework)
+          (wrap-in-quotations [(subs old-documentation 0 (.indexOf old-documentation test-framework)) test-framework test-string])
           (wrap-in-quotations [old-documentation "\n" test-framework test-string]))
-        (str "\n\"" test-framework test-string "\"")))
+        (str "\n\"" (escape-quatations (str test-framework test-string)) "\"")))
     old-documentation))
 
 (def regex-char-esc-smap
-  (let [esc-chars "[]*&^%$#"]
+  (let [esc-chars "[]*&^%$#()"]
     (zipmap esc-chars
             (map #(str "\\" %) esc-chars))))
 
@@ -56,8 +60,8 @@
 (defn- function-without-description [function-text description]
   (clojure.string/replace function-text
                           (if (not-empty description)
-                              (re-pattern (str "\"" description "\" "))
-                              #"")
+                            (re-pattern (str "\"" (escape-quatations (escape-quatations description)) "\" "))
+                            #"")
                           ""))
 (defn- function-name-end-position-in-function [function-text function-name]
   (+ (.indexOf function-text function-name)
