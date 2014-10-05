@@ -4,24 +4,29 @@
            [leiningen.read.test_content :as tc]
            [leiningen.update.code-description :as cd]))
 
-(defn update-functions [project-properties]
+
+(defn- add-comments-to-function [source-file comments]
+  (loop [source-file source-file comments comments]
+    (if-not (seq comments)
+      source-file
+      (recur (cd/add-test->commend (first comments) source-file)
+             (rest comments)))))
+
+(defn- update-file [mapped-file]
+  (fs/write-file (str
+                   (:source-path mapped-file)
+                   (:source-filename mapped-file))
+                   (add-comments-to-function
+                     (:source-file mapped-file)
+                     (tc/test-based-comments (:test-file mapped-file)))))
+
+(defn- update [project-properties]
   (let [tests (fs/read-files (:test-paths project-properties) ["clj" "cljs"])
         sources (fs/read-files (:source-paths project-properties) ["clj" "cljs"])
-        mapped-files (mapping/map-tests-with-source-code tests sources)
-        source-files-new-content (map (fn [mapped-file]
-                              (let [comments (tc/test-based-comments (:test-file mapped-file))]
-                                (loop [source-file (:source-file mapped-file) comments comments]
-                                  (if-not (seq comments)
-                                    (fs/write-file (str
-                                                     (:source-path mapped-file)
-                                                     (:source-filename mapped-file))
-                                                   source-file)
-                                    (recur (cd/add-test->commend (first comments) source-file)
-                                           (rest comments))))))
-                            mapped-files)]
-    source-files-new-content))
+        mapped-files (mapping/map-tests-with-source-code tests sources)]
+        (map update-file mapped-files)))
 
 (defn plum [project & args]
-  (let [result (update-functions project)]
+  (let [result (update project)]
     (leiningen.core.main/info result)))
 
