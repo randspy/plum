@@ -27,14 +27,15 @@
     (str "\"" token "\"")
     (str token)))
 
-(defn- one-test-base-comment [tokens marker]
+(defn- one-test-based-comment [tokens marker]
   (let [comment (str "(" (clojure.string/join " " (map convert-token->string tokens)) ")")]
        {:function-name  (function-name-after-marker comment marker)
         :test-framework "Speclj"
-        :tests          (extract-text comment marker)}))
+        :tests          [(extract-text comment marker)]}))
 
-(defn test-base-coments [source-code marker]
-  (if (.contains source-code marker)
-    (let [test-tokens (tokens/find-tokens-of-scope-containing-marker source-code marker)]
-          (map #(one-test-base-comment % marker) test-tokens))
-    []))
+(defn test-based-comments [source-code]
+  (let [marker "Speclj:"]
+    (if (.contains source-code marker)
+      (let [test-tokens (tokens/find-tokens-of-scope-containing-marker source-code marker)]
+        (map #(one-test-based-comment % marker) test-tokens))
+      [])))

@@ -1,4 +1,5 @@
-(ns leiningen.file-operations)
+(ns leiningen.file-operations
+  (:require [clojure.java.io :as io]))
 
 (defn- string-is-ending-with? [text endings]
   (some  #(.endsWith text %) endings))
@@ -13,11 +14,15 @@
   (let [paths (map #(get-files-paths % endings) paths)]
     (reduce concat paths)))
 
-(defn- read-file [filename]
-  (let [filename-without-path (last (clojure.string/split filename #"(\\|/)"))
+(defn- read-file [path filename]
+  (let [filename-without-path (clojure.string/replace filename (re-pattern path) "")
         file-content (slurp filename)]
-    {:filename filename-without-path :content file-content}))
+    {:file-path path :filename filename-without-path :content file-content}))
 
 (defn read-files [paths endings]
   (let [file-list (filenames-in-paths paths endings)]
-    (map read-file file-list)))
+    (map read-file paths file-list)))
+
+(defn write-file [filename string]
+  (with-open [write-string (io/writer filename)]
+    (.write write-string string)))

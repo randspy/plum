@@ -6,6 +6,7 @@
 
 (defn- create-structure [test source]
   {:source-filename (:filename source)
+   :source-path (:file-path source)
    :source-file (:content source)
    :test-file (:content test)})
 
